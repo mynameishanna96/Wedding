@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lễ Dạm Ngõ - Thuỳ Dương & Minh Triết</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Tông màu kem gấm tệp với ảnh nền bạn gửi */
+            --bg-paper: #F3EFE6;
+            --gold-accent: #D4AF37;
+            --text-red: #A31D1D;
+            --song-hy-pink: #c2185b;
+            --light-gold: rgba(212, 175, 55, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* LỚP NỀN CHÍNH: SỬ DỤNG ẢNH KHUNG HOA BẠN GỬI */
+        .main-card {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-paper);
+            /* Thay thế bằng ảnh khung hoa mẫu đơn của bạn */
+            background-image:
+                linear-gradient(rgba(243, 239, 230, 0.1), rgba(243, 239, 230, 0.1)),
+                url('http://googleusercontent.com/image_generation_content/0');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            isolation: isolate;
+        }
+
+        /* KHUNG VIỀN VÀNG TRONG ẢNH (Bổ sung thêm hiệu ứng lấp lánh nhẹ) */
+        .frame-inner-overlay {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            right: 50px;
+            bottom: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* NỘI DUNG DỮ LIỆU */
+        .content-container {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            width: 85%;
+            max-width: 1400px;
+            transition: opacity 1s ease;
+        }
+
+        /* TIÊU ĐỀ */
+        .title-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            color: var(--text-red);
+            font-weight: 700;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0;
+        }
+
+        .loaded .title-label {
+            animation: fadeInDown 1.2s ease forwards 0.2s;
+        }
+
+        /* KHỐI TÊN & SONG HỶ */
+        .center-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 130px;
+            margin-top: 3.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            width: 100%;
+        }
+
+        .name-txt {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 7.5rem;
+            color: var(--text-red);
+            flex: 1;
+            font-weight: 400;
+            line-height: 1;
+            opacity: 0;
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.05));
+            max-width: 240px;
+            white-space: pre-line;
+        }
+
+        .name-l {
+            text-align: right;
+        }
+
+        .name-r {
+            text-align: left;
+        }
+
+        .loaded .name-l {
+            animation: slideInLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.8s;
+        }
+
+        .loaded .name-r {
+            animation: slideInRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 1s;
+        }
+
+        /* SONG HỶ TRUNG TÂM - TO DẦN ĐẬM DẦN */
+        .song-hy-wrap {
+            width: 180px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        .loaded .song-hy-wrap {
+            animation: zoomInSongHy 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.4s;
+        }
+
+        .song-hy-icon {
+            font-size: 13rem;
+            color: var(--song-hy-pink);
+            line-height: 1;
+            opacity: 0.85;
+            animation: pulseGlow 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(163, 29, 29, 0.1));
+        }
+
+        /* LỜI CẢM ƠN - HẠ THẤP */
+        .thank-you-msg {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: var(--text-red);
+            margin-top: 80px;
+            opacity: 0;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .loaded .thank-you-msg {
+            animation: fadeInUp 1.2s ease forwards 1.6s;
+        }
+
+        /* FOOTER NGÀY THÁNG */
+        .footer-date-container {
+            margin-top: 40px;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .loaded .footer-date-container {
+            animation: fadeInUp 1.2s ease forwards 2.2s;
+        }
+
+        .solar-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--text-red);
+            font-weight: 700;
+            letter-spacing: 6px;
+            border-top: 1px solid var(--light-gold);
+            border-bottom: 1px solid var(--light-gold);
+            padding: 8px 50px;
+            display: inline-block;
+        }
+
+        .lunar-date {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-red);
+            letter-spacing: 2px;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* HIỆU ỨNG CÁNH HOA RƠI */
+        .rose-petal {
+            position: absolute;
+            z-index: 30;
+            pointer-events: none;
+            animation: roseFall linear infinite;
+        }
+
+        .glitter {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            z-index: 12;
+            pointer-events: none;
+            box-shadow: 0 0 10px #fff;
+            animation: twinkle var(--dur) ease-in-out infinite;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-150px);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(150px);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes zoomInSongHy {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+
+            70% {
+                opacity: 1;
+                transform: scale(1.1) rotate(0deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+                text-shadow: 0 0 10px rgba(248, 187, 208, 0.2);
+            }
+
+            50% {
+                transform: scale(1.15);
+                opacity: 0.95;
+                text-shadow: 0 0 30px var(--gold-accent);
+            }
+        }
+
+        @keyframes roseFall {
+            0% {
+                top: -10%;
+                transform: rotate(0deg) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            100% {
+                top: 110%;
+                transform: rotate(360deg) translateX(120px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        /* HOA GÓC - JFIF */
+        .flower-corner {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .flower-corner img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            display: block;
+        }
+
+        /* Vị trí 4 góc */
+        .fc-tl {
+            top: -30px;
+            left: -30px;
+            transform-origin: top left;
+        }
+
+        .fc-tr {
+            top: -30px;
+            right: -30px;
+            transform-origin: top right;
+        }
+
+        .fc-bl {
+            bottom: -30px;
+            left: -30px;
+            transform-origin: bottom left;
+        }
+
+        .fc-br {
+            bottom: -30px;
+            right: -30px;
+            transform-origin: bottom right;
+        }
+
+        /* Hình ảnh bên phải và dưới: lật đối xứng */
+        .fc-tl img {
+            transform: scaleX(-1);
+        }
+
+        .fc-bl img {
+            transform: scale(-1, -1);
+        }
+
+        .fc-br img {
+            transform: scaleY(-1);
+        }
+
+        /* Animations xuất hiện */
+        .loaded .fc-tl {
+            animation: fcEnterTL 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.3s, fcSway 9s ease-in-out 1.8s infinite;
+        }
+
+        .loaded .fc-tr {
+            animation: fcEnterTR 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s, fcSway 9s ease-in-out 2s infinite;
+        }
+
+        .loaded .fc-bl {
+            animation: fcEnterBL 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.7s, fcSway 9s ease-in-out 2.2s infinite;
+        }
+
+        .loaded .fc-br {
+            animation: fcEnterBR 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.9s, fcSway 9s ease-in-out 2.4s infinite;
+        }
+
+        @keyframes fcEnterTL {
+            0% {
+                opacity: 0;
+                transform: translate(-40px, -40px) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        @keyframes fcEnterTR {
+            0% {
+                opacity: 0;
+                transform: translate(40px, -40px) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        @keyframes fcEnterBL {
+            0% {
+                opacity: 0;
+                transform: translate(-40px, 40px) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        @keyframes fcEnterBR {
+            0% {
+                opacity: 0;
+                transform: translate(40px, 40px) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        @keyframes fcSway {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.02) rotate(0.8deg);
+            }
+        }
+
+        /* TỐI ƯU TV */
+        @media (min-width: 1900px) {
+            .name-txt {
+                font-size: 9rem;
+                max-width: 380px;
+            }
+
+            .solar-date {
+                font-size: 4rem;
+            }
+
+            .lunar-date {
+                font-size: 2rem;
+            }
+
+            .song-hy-icon {
+                font-size: 18rem;
+            }
+
+            .thank-you-msg {
+                font-size: 3.2rem;
+                margin-top: 100px;
+            }
+
+            .flower-corner {
+                width: 420px;
+                height: 420px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-card">
+        <!-- KHUNG VIỀN PHỤ TRÊN NỀN -->
+        <div class="frame-inner-overlay"></div>
+
+        <!-- NỘI DUNG CHÍNH (NẰM TRÊN KHUNG HOA) -->
+        <div class="content-container" id="main-content">
+            <div class="title-label">Lễ Dạm Ngõ</div>
+
+            <div class="center-group">
+                <!-- Tên Thuỳ Dương (Ngắt dòng) -->
+                <div class="name-txt name-l">Thuỳ&#10;Dương</div>
+
+                <div class="song-hy-wrap">
+                    <div class="song-hy-icon">囍</div>
+                </div>
+
+                <!-- Tên Minh Triết (Ngắt dòng) -->
+                <div class="name-txt name-r">Minh&#10;Triết</div>
+            </div>
+
+            <div class="thank-you-msg">
+                Xin cảm ơn hai bên gia đình đã yêu thương và vun đắp cho chúng con!
+            </div>
+
+            <div class="footer-date-container">
+                <div class="solar-date">22 . 03 . 2026</div>
+                <div class="lunar-date">Nhằm ngày 04 . 02 năm Bính Ngọ</div>
+            </div>
+        </div>
+
+        <!-- HOA GÓC TRÊN TRÁI -->
+        <div class="flower-corner fc-tl">
+            <img src="2.png" alt="hoa góc trên trái">
+        </div>
+
+        <!-- HOA GÓC TRÊN PHẢI -->
+        <div class="flower-corner fc-tr">
+            <img src="2.png" alt="hoa góc trên phải">
+        </div>
+
+        <!-- HOA GÓC DƯỚI TRÁI -->
+        <div class="flower-corner fc-bl">
+            <img src="2.png" alt="hoa góc dưới trái">
+        </div>
+
+        <!-- HOA GÓC DƯỚI PHẢI -->
+        <div class="flower-corner fc-br">
+            <img src="2.png" alt="hoa góc dưới phải">
+        </div>
+
+
+        <!-- HIỆU ỨNG CÁNH HOA VÀ LẤP LÁNH -->
+        <div id="fx-layer"></div>
+    </div>
+
+    <script>
+        const content = document.getElementById('main-content');
+
+        function runPresentationLoop() {
+            content.style.opacity = "0";
+            setTimeout(() => {
+                document.body.classList.remove('loaded');
+                void document.body.offsetWidth;
+                content.style.opacity = "1";
+                document.body.classList.add('loaded');
+            }, 1000);
+        }
+
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+            // Chu kỳ 13 giây để quan khách ngắm nền hoa đẹp
+            setInterval(runPresentationLoop, 13000);
+
+            const fx = document.getElementById('fx-layer');
+            function createPetal() {
+                const p = document.createElement('div');
+                p.className = 'rose-petal';
+                const size = Math.random() * 20 + 10 + 'px';
+                p.style.width = size; p.style.height = size;
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = Math.random() * 8 + 8 + 's';
+                const colors = ['#D32F2F', '#FFB7C5', '#FCE4EC', '#FFFFFF'];
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.borderRadius = '50% 0 50% 50%';
+                fx.appendChild(p);
+                setTimeout(() => p.remove(), 16000);
+            }
+            setInterval(createPetal, 500);
+
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'glitter';
+                const size = Math.random() * 3 + 2 + 'px';
+                sparkle.style.width = size; sparkle.style.height = size;
+                sparkle.style.left = Math.random() * 100 + 'vw'; sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.setProperty('--dur', (Math.random() * 3 + 2) + 's');
+                sparkle.style.animationDelay = (Math.random() * 5) + 's';
+                fx.appendChild(sparkle);
+            }
+        });
+    </script>
+</body>
+
+</html>
