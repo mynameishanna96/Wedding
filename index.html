@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -25,6 +25,13 @@
         @font-face {
             font-family: 'Daughter';
             src: url('font/1.ttf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'TitleFont';
+            src: url('font/4.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -83,12 +90,12 @@
         }
 
         .title-label {
-            font-family: 'Playfair Display', serif;
+            font-family: 'TitleFont', 'Daughter', serif;
             font-size: 5.5rem;
             color: var(--text-red);
             font-weight: 700;
             letter-spacing: 12px;
-            text-transform: uppercase;
+
             margin-bottom: 20px;
             opacity: 0;
         }
@@ -111,7 +118,7 @@
         .name-txt {
             font-family: 'Daughter', 'Pinyon Script', cursive;
             font-size: 7.5rem;
-            color: var(--text-red);
+            color: #a83060;
             flex: 1;
             font-weight: 400;
             line-height: 1;
@@ -130,11 +137,30 @@
         }
 
         .loaded .name-l {
-            animation: slideInLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.8s;
+            animation:
+                slideInLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.8s,
+                nameGlow 5s ease-in-out 2.6s infinite;
         }
 
         .loaded .name-r {
-            animation: slideInRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 1s;
+            animation:
+                slideInRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 1s,
+                nameGlow 5s ease-in-out 5s infinite;
+        }
+
+        @keyframes nameGlow {
+            0%, 100% {
+                filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.05));
+                color: #a83060;
+            }
+            30% {
+                filter: drop-shadow(0 0 18px rgba(220, 80, 140, 0.9));
+                color: #e0407a;
+            }
+            60% {
+                filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.05));
+                color: #a83060;
+            }
         }
 
 
@@ -155,7 +181,7 @@
 
         .song-hy-icon {
             font-size: 13rem;
-            color: var(--song-hy-pink);
+            color: var(--text-red);
             line-height: 1;
             opacity: 0.85;
             animation: pulseGlow 5s ease-in-out infinite;
@@ -406,7 +432,7 @@
             50% {
                 transform: scale(1.15);
                 opacity: 0.95;
-                text-shadow: 0 0 30px var(--gold-accent);
+                text-shadow: 0 0 30px rgba(220, 80, 120, 0.8);
             }
         }
 
